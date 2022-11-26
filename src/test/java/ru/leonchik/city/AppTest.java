@@ -1,4 +1,4 @@
-package ru.leonchik;
+package ru.leonchik.city;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
