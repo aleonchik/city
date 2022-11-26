@@ -36,6 +36,9 @@ CREATE TABLE cr_address (
 INSERT INTO cr_address (district_code, street_code, building, extension, apartment)
 VALUES (1, 1, '10', '2', '121');
 
+INSERT INTO cr_address (district_code, street_code, building, extension, apartment)
+VALUES (1, 1, '271', null, '4');
+
 CREATE TABLE cr_person (
     person_id SERIAL,
     sur_name VARCHAR(100),
@@ -82,7 +85,7 @@ INSERT INTO cr_address_person (address_id, person_id, start_date,end_date)
     VALUES (1, 1, '2014-10-12', null);
 
 INSERT INTO cr_address_person (address_id, person_id, start_date,end_date)
-    VALUES (1, 2, '2014-10-12', null);
+    VALUES (2, 2, '2014-10-12', null);
 
 INSERT INTO cr_address_person (address_id, person_id, start_date,end_date)
     VALUES (1, 3, '2016-02-05', null);
@@ -104,10 +107,10 @@ INSERT INTO cr_address_person (address_id, person_id, start_date,end_date)
 --        AND a.street_code = 1
 --        AND upper(a.building) = upper('10') and upper(a.extension) = upper('2') and upper(a.apartment) = upper('121');
 
-SELECT temporal FROM cr_address_person ap
-    INNER JOIN cr_person p ON p.person_id = ap.person_id
-    INNER JOIN cr_address a ON a.address_id = ap.address_id
-    WHERE upper(p.sur_name) = upper('Васильев') AND upper(p.given_name) = upper('Павел')
-        AND upper(p.patronymic) = upper('Николаевич') and p.date_of_birth = '1995-03-18'
-        AND a.street_code = 1
-        AND upper(a.building) = upper('10') and upper(a.extension) = upper('2') and upper(a.apartment) = upper('121');
+--SELECT temporal FROM cr_address_person ap
+--    INNER JOIN cr_person p ON p.person_id = ap.person_id
+--    INNER JOIN cr_address a ON a.address_id = ap.address_id
+--    WHERE upper(p.sur_name) = upper('Васильев') AND upper(p.given_name) = upper('Павел')
+--        AND upper(p.patronymic) = upper('Николаевич') and p.date_of_birth = '1995-03-18'
+--        AND a.street_code = 1
+--        AND upper(a.building) = upper('10') and upper(a.extension) = upper('2') and upper(a.apartment) = upper('121');
