@@ -9,10 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.leonchik.city.dao.PersonCheckDao;
+import ru.leonchik.city.dao.PoolConnectionBuilder;
 import ru.leonchik.city.domain.PersonRequest;
 import ru.leonchik.city.domain.PersonResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /*import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,6 +39,7 @@ public class CheckPersonServlet extends HttpServlet {
 //        super.init();
         logger.info("Servlet is created");
         dao = new PersonCheckDao();
+        dao.setConnectionBuilder(new PoolConnectionBuilder());
     }
 
     @Override
@@ -49,14 +52,16 @@ public class CheckPersonServlet extends HttpServlet {
 
         PersonRequest pr = new PersonRequest();
 
-        pr.setSurName(surname);
-        pr.setGivenName("Павел");
-        pr.setPatronymic("Николаевич");
-        pr.setDateOfBirth(LocalDate.of(1995, 3, 18));
-        pr.setStreetCode(1);
-        pr.setBuilding("10");
-        pr.setExtension("2");
-        pr.setApartment("121");
+        pr.setSurName(req.getParameter("surname"));
+        pr.setGivenName(req.getParameter("givenname"));
+        pr.setPatronymic(req.getParameter("patronymic"));
+        LocalDate dateOfBirth = LocalDate.parse(req.getParameter("dateOfBirth"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+//        pr.setDateOfBirth(LocalDate.of(1995, 3, 18));
+        pr.setDateOfBirth(dateOfBirth);
+        pr.setStreetCode(Integer.parseInt(req.getParameter("streetCode")));
+        pr.setBuilding(req.getParameter("building"));
+        pr.setExtension(req.getParameter("extension"));
+        pr.setApartment(req.getParameter("apartment"));
 
         try {
 //            PersonCheckDao dao = new PersonCheckDao();

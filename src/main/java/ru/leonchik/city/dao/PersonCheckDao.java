@@ -21,14 +21,26 @@ public class PersonCheckDao {
 //            "        AND upper(a.extension) = upper(?) " +
 //            "        AND upper(a.apartment) = upper(?)";
 
-    public PersonCheckDao() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private ConnectionBuilder connectionBuilder;
+
+    public void setConnectionBuilder(ConnectionBuilder connectionBuilder) {
+        this.connectionBuilder = connectionBuilder;
     }
 
+    private Connection getConnection() throws SQLException {
+//        return DriverManager.getConnection("jdbc:postgresql://localhost/alexey", "alexey", "alexey");
+        // return null;
+        return connectionBuilder.getConnection();
+    }
+
+    /*   public PersonCheckDao() {
+            try {
+                Class.forName("org.postgresql.Driver");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    */
     public PersonResponse checkPerson(PersonRequest request) throws PersonCheckException {
         PersonResponse response = new PersonResponse();
 
@@ -54,8 +66,8 @@ public class PersonCheckDao {
             stmt.setString(count++, request.getSurName());
             stmt.setString(count++, request.getGivenName());
             stmt.setString(count++, request.getPatronymic());
-            stmt.setDate(count++, java.sql.Date.valueOf(request.getDateOfBirth()));
-            stmt.setInt(count++, request.getStreetCode());
+            stmt.setDate(count++,   java.sql.Date.valueOf(request.getDateOfBirth()));
+            stmt.setInt(count++,    request.getStreetCode());
             stmt.setString(count++, request.getBuilding());
 
             if(request.getExtension() != null) {
@@ -77,10 +89,5 @@ public class PersonCheckDao {
         }
 
         return response;
-    }
-
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:postgresql://localhost/alexey", "alexey", "alexey");
-        // return null;
     }
 }
