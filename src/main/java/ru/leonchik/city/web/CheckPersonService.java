@@ -1,9 +1,17 @@
 package ru.leonchik.city.web;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.leonchik.city.dao.PersonCheckDao;
+import ru.leonchik.city.dao.PoolConnectionBuilder;
 import ru.leonchik.city.domain.PersonRequest;
 import ru.leonchik.city.domain.PersonResponse;
+import ru.leonchik.city.exception.PersonCheckException;
 
 import java.time.LocalDate;
 
@@ -70,12 +78,31 @@ Header Content-Type application/json
 
 
     @Path("/check")
+    @Singleton
     public class CheckPersonService {
+
+        private static final Logger logger = LoggerFactory.getLogger(CheckPersonService.class);
+
+        private PersonCheckDao dao;
+
+        @PostConstruct
+        public void init() {
+            logger.info("SERVICE is created");
+            dao = new PersonCheckDao();
+            dao.setConnectionBuilder(new PoolConnectionBuilder());
+        }
+
+        /*@PreDestroy
+        public void destroy() {
+            logger.info("FINISH");
+        }*/
+
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-        public PersonResponse checkPerson(PersonRequest request) {
-            System.out.println(request.toString());
-            return new PersonResponse();
+        public PersonResponse checkPerson(PersonRequest request) throws PersonCheckException {
+            logger.info(request.toString());
+//            throw new PersonCheckException("EXCEPTION: ");
+            return dao.checkPerson(request);
         }
 }
